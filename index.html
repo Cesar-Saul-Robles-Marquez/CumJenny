@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños Jennyfer!</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        /* --- ESTILOS GENERALES --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fff0f5; /* Fondo rosita muy suave */
+            color: #555;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        h1, h2 {
+            color: #ff6f91; /* Rosa vibrante */
+            text-align: center;
+        }
+
+        /* --- LLUVIA DE CONFETI (CSS PURO) --- */
+        .confetti-rain {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ffd1dc;
+            top: -10vh;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1; /* Encima de la lluvia */
+        }
+
+        /* --- HEADER --- */
+        header {
+            text-align: center;
+            padding: 50px 0;
+            background: linear-gradient(135deg, #fff 0%, #d4ffea 100%); /* Blanco a Verde Menta */
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .cat-gif {
+            max-width: 200px;
+            border-radius: 50%;
+            border: 5px solid #ff9a9e;
+        }
+
+        /* --- SECCIÓN DE RECUERDOS (ZIG ZAG) --- */
+        .memory-section {
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+        }
+
+        .memory-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            border: 2px solid #baffc9; /* Borde verde menta */
+        }
+
+        .memory-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* MAGIA DEL ZIG ZAG: Los pares invierten el orden */
+        .memory-card:nth-child(even) {
+            flex-direction: row-reverse;
+            border-color: #ffb7b2; /* Borde rosa para los pares */
+        }
+
+        .memory-text {
+            width: 45%;
+            padding: 20px;
+        }
+
+        .memory-text h3 {
+            color: #88d8b0; /* Verde título */
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .memory-img-container {
+            width: 45%;
+            overflow: hidden;
+            border-radius: 15px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .memory-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .memory-img:hover {
+            transform: scale(1.05);
+        }
+
+        .click-hint {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            pointer-events: none;
+        }
+
+        /* --- LIGHTBOX (MODAL) --- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.8); 
+            animation: fadeIn 0.3s;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 80%;
+            max-height: 80vh;
+            border-radius: 10px;
+            border: 4px solid white;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0} 
+            to {opacity: 1}
+        }
+
+        /* Responsive para móviles */
+        @media (max-width: 768px) {
+            .memory-card, .memory-card:nth-child(even) {
+                flex-direction: column;
+                text-align: center;
+            }
+            .memory-text, .memory-img-container {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="confetti-rain" id="confetti-rain"></div>
+
+    <header>
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3VubWR5eW84Y214aGZ6eGg4Zmx6ZnR5Znh6ZnR5Znh6ZnR5Znh6ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MDJ9IbxxvDUQM/giphy.gif" alt="Gato Cumpleaños" class="cat-gif">
+        <h1>¡Feliz Cumpleaños, Jennyfer! 🎉</h1>
+        <p>Espero que hoy tengas un día tan increíble como tú.</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="memory-section">
+            
+            <div class="memory-card">
+                <div class="memory-text">
+                    <h3>Por un año de risas</h3>
+                    <p>Donde las risas no faltaban incluso en momentos de mucha carga.</p>
+                </div>
+                <div class="memory-img-container" onclick="openModal(this)">
+                    <img src="cajitafeli.jpg" class="memory-img" alt="Recuerdo 1">
+                    <span class="click-hint">Click para sorpresa ✨</span>
+                </div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-text">
+                    <h3>Por un año de locuras</h3>
+                    <p>Donde demostramos lo mal de la cabeza que andamos y no tememos ser nosotros mismos.</p>
+                </div>
+                <div class="memory-img-container" onclick="openModal(this)">
+                    <img src="pie.jpg" class="memory-img" alt="Recuerdo 2">
+                    <span class="click-hint">Click para sorpresa ✨</span>
+                </div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-text">
+                    <h3>Por un año de logros</h3>
+                    <p>Donde con mucho exito logramos hacer remontadas historicas y dejamos atras la oscura idea de darse de baja.</p>
+                </div>
+                <div class="memory-img-container" onclick="openModal(this)">
+                    <img src="pvz.jpg" class="memory-img" alt="Recuerdo 3">
+                    <span class="click-hint">Click para sorpresa ✨</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="myModal" class="modal" onclick="closeModal()">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="img01">
+    </div>
+
+    <script>
+        // --- 1. CONFIGURACIÓN DE LA LLUVIA DE CONFETI (CSS) ---
+        function createRain() {
+            const container = document.getElementById('confetti-rain');
+            const colors = ['#ffc1cc', '#b2f7ef', '#fff', '#f0e68c']; // Rosa, Verde, Blanco, Amarillo pastel
+            
+            for(let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti-piece');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                container.appendChild(confetti);
+            }
+        }
+        createRain();
+
+        // --- 2. LÓGICA DEL MODAL Y EXPLOSIÓN ---
+        const modal = document.getElementById("myModal");
+        const modalImg = document.getElementById("img01");
+
+        function openModal(element) {
+            // 1. Abrir la imagen en grande
+            modal.style.display = "flex";
+            modalImg.src = element.querySelector('img').src;
+
+            // 2. Disparar la explosión de confeti
+            triggerExplosion();
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        // Función de explosión usando canvas-confetti
+        function triggerExplosion() {
+            var duration = 15 * 100;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 2000 };
+
+            var random = function(min, max) { return Math.random() * (max - min) + min; }
+
+            // Lanza confeti desde el centro
+            confetti(Object.assign({}, defaults, { 
+                particleCount: 100,
+                origin: { x: 0.5, y: 0.5 },
+                colors: ['#ff6f91', '#88d8b0', '#ffffff'] // Colores personalizados
+            }));
+        }
+    </script>
+</body>
+</html>
