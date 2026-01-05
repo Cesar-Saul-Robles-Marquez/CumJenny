@@ -56,18 +56,100 @@
         }
 
         /* --- HEADER --- */
+        /* --- HEADER --- */
         header {
-            text-align: center;
-            padding: 50px 0;
-            background: linear-gradient(135deg, #fff 0%, #d4ffea 100%); /* Blanco a Verde Menta */
-            border-bottom-left-radius: 50px;
-            border-bottom-right-radius: 50px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            /* Mantiene la proporción exacta de tu imagen (aprox 4.5:1) */
+            /* Así la imagen SIEMPRE se ve completa de extremo a extremo */
+            aspect-ratio: 4.5 / 1; 
+            
+            /* Configuración del fondo */
+            background-image: url('jenny banner (1).jpg');
+            background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            /* Bordes y sombra */
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             margin-bottom: 40px;
+
+            /* Centrar el contenido (texto y gato) */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
+        /* --- ESTILOS PARA QUE EL TEXTO RESALTE SOBRE EL BANNER --- */
+        /* --- HEADER --- */
+        header {
+            width: 100%;
+            /* ESTA ES LA CLAVE: aspect-ratio */
+            /* Le dice al navegador: "Por cada 4.5 unidades de ancho, dame 1 de alto" */
+            /* Esto mantiene la forma rectangular de tu banner perfecta en cualquier pantalla */
+            aspect-ratio: 4.5 / 1; 
+            
+            /* Configuración del fondo */
+            background-image: url('jenny banner (1).jpg');
+            background-size: cover; /* Al usar aspect-ratio, cover encajará perfecto */
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            /* Decoración extra */
+            border-bottom-left-radius: 20px; /* Reduje el borde para que no corte esquinas de la foto */
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
+
+            /* Para centrar el GIF del gato si decides dejarlo */
+            display: flex;
+            align-items: center;     /* Centrado vertical */
+            justify-content: center; /* Centrado horizontal */
+            position: relative;
+        }
+
+        /* Ajuste para el gato para que no tape todo el banner */
         .cat-gif {
+            max-width: 15%;  /* Lo hacemos más pequeñito para que no estorbe */
+            height: auto;
+            border: 3px solid #fff;
+            opacity: 0.9;    /* Un poco transparente para ver el fondo */
+            margin-top: 5%;  /* Bajarlo un poco si tapa las letras del banner */
+        }
+
+        
+        @media (max-width: 768px) {
+            header {
+                /* Si en celular se ve muy delgada la tira, puedes cambiar esto */
+                /* Pero si lo cambias, se cortarán los lados (Homer y Deadpool) */
+                width: 100%; 
+                border-radius: 0 0 20px 20px;
+            }
+            .cat-gif {
+                display: none; /* Ocultamos el gato en celular para ver bien el banner */
+            }
+        }
+
+        /* AJUSTE PARA MÓVILES */
+        @media (max-width: 768px) {
+            header {
+                /* En celular, permitimos que sea un poco más alto para que quepa el texto */
+                /* aunque se recorte un pelín los lados, para priorizar que se lea el mensaje */
+                aspect-ratio: auto; 
+                padding: 40px 20px;
+            }
+            
+            header h1 {
+                font-size: 1.8rem; /* Texto más chico en celular */
+            }
+        }
+        .cat-gif {
+            
             max-width: 200px;
+            object-fit: contain;
             border-radius: 50%;
             border: 5px solid #ff9a9e;
         }
